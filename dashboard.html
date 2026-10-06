@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Sales SMT - Kantin</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+  }
+  .dashboard {
+    width: 100vw;
+    height: 100vh;
+    padding: 30px 50px;
+    display: flex;
+    flex-direction: column;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 3px solid #1e293b;
+    margin-bottom: 24px;
+  }
+  .header h1 {
+    font-size: 40px;
+    font-weight: 700;
+    color: #f8fafc;
+    letter-spacing: 1px;
+  }
+  .header .clock {
+    font-size: 34px;
+    font-weight: 600;
+    color: #38bdf8;
+    font-variant-numeric: tabular-nums;
+  }
+  .header .status {
+    font-size: 16px;
+    color: #64748b;
+    margin-left: 16px;
+  }
+  .slide-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+    pointer-events: none;
+  }
+  .slide.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ---------- LEADERBOARD ---------- */
+  .leaderboard-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 20px;
+    height: 100%;
+  }
+  .leaderboard-card {
+    background: #1e293b;
+    border-radius: 18px;
+    padding: 22px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-left: 8px solid #38bdf8;
+    animation: slideIn 0.6s ease-out;
+  }
+  .leaderboard-card.rank-1 { border-left-color: #fbbf24; background: linear-gradient(135deg, #1e293b, #292524); }
+  .leaderboard-card.rank-2 { border-left-color: #cbd5e1; }
+  .leaderboard-card.rank-3 { border-left-color: #b45309; }
+  .leaderboard-card .lb-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .leaderboard-card .lb-photo {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #38bdf8;
+    flex-shrink: 0;
+    background: #334155;
+  }
+  .leaderboard-card.rank-1 .lb-photo { border-color: #fbbf24; }
+  .leaderboard-card.rank-2 .lb-photo { border-color: #cbd5e1; }
+  .leaderboard-card.rank-3 .lb-photo { border-color: #b45309; }
+  .leaderboard-card .lb-name-block { flex: 1; min-width: 0; }
+  .leaderboard-card .rank {
+    font-size: 20px;
+    font-weight: 700;
+    color: #38bdf8;
+  }
+  .leaderboard-card.rank-1 .rank { color: #fbbf24; }
+  .leaderboard-card .name {
+    font-size: 20px;
+    font-weight: 600;
+    color: #f1f5f9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .leaderboard-card .achievement {
+    font-size: 36px;
+    font-weight: 800;
+    color: #f8fafc;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+  .leaderboard-card .target {
+    font-size: 15px;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+  .leaderboard-card .pct {
+    font-size: 24px;
+    font-weight: 700;
+    margin-top: 6px;
+  }
+  .pct.green { color: #4ade80; }
+  .pct.yellow { color: #facc15; }
+  .pct.red { color: #f87171; }
+
+  /* ---------- INDIVIDUAL CARDS ---------- */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 18px;
+    height: 100%;
+  }
+  .person-card {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    animation: slideIn 0.6s ease-out;
+  }
+  .person-card .top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+  .person-card .photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #38bdf8;
+    flex-shrink: 0;
+    background: #334155;
+  }
+  .person-card .info { flex: 1; min-width: 0; }
+  .person-card .name {
+    font-size: 22px;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .person-card .nik {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 6px;
+  }
+  .person-card .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 5px;
+  }
+  .person-card .label {
+    font-size: 16px;
+    color: #94a3b8;
+  }
+  .person-card .value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #e2e8f0;
+    font-variant-numeric: tabular-nums;
+  }
+  .person-card .pct-value {
+    font-size: 26px;
+    font-weight: 800;
+  }
+  .badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge.star { background: #166534; color: #bbf7d0; }
+  .badge.average { background: #854d0e; color: #fef08a; }
+  .badge.poor { background: #991b1b; color: #fecaca; }
+
+  /* ---------- SUMMARY ---------- */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 22px;
+    height: 100%;
+  }
+  .summary-card {
+    background: #1e293b;
+    border-radius: 20px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    animation: slideIn 0.6s ease-out;
+  }
+  .summary-card .big-number {
+    font-size: 64px;
+    font-weight: 800;
+    color: #38bdf8;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .summary-card .label {
+    font-size: 22px;
+    color: #94a3b8;
+    margin-top: 10px;
+  }
+
+  /* ---------- DOTS ---------- */
+  .dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 10;
+  }
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #334155;
+    transition: all 0.3s;
+  }
+  .dot.active {
+    background: #38bdf8;
+    transform: scale(1.3);
+  }
+
+  /* ---------- ERROR ---------- */
+  .error-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #7f1d1d;
+    color: #fecaca;
+    padding: 30px 50px;
+    border-radius: 16px;
+    font-size: 20px;
+    text-align: center;
+    display: none;
+    z-index: 100;
+    max-width: 70%;
+  }
+  .error-box.show { display: block; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="dashboard">
+  <div class="header">
+    <h1>📊 PENCAPAIAN SALES - SMT</h1>
+    <div>
+      <span class="clock" id="clock">--:--:--</span>
+      <span class="status" id="status">Memuat data...</span>
+    </div>
+  </div>
+  <div class="slide-container">
+    <div class="slide active" id="slide-0"><div class="leaderboard-grid" id="leaderboardGrid"></div></div>
+    <div class="slide" id="slide-1"><div class="cards-grid" id="cardsGrid"></div></div>
+    <div class="slide" id="slide-2"><div class="summary-grid" id="summaryGrid"></div></div>
+    <div class="slide" id="slide-3"><div class="summary-grid" id="categoryGrid"></div></div>
+    <div class="dots" id="dots"></div>
+    <div class="error-box" id="errorBox"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// KONFIGURASI
+// ============================================================
+const SHEET_ID = '1_R03xSTGWXrQ9YfbREEOzp4PO2pQxo5RJhoSFtR87eY';
+const GID = '207779196';           // GID tab "HASIL SMT"
+const REFRESH_INTERVAL = 120000;   // 120.000 ms = 2 menit
+const SLIDE_DURATION   = 15000;    // 15 detik per slide
+
+// Placeholder foto (SVG inline, tidak perlu internet)
+const PLACEHOLDER = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">' +
+  '<rect width="200" height="200" fill="#334155"/>' +
+  '<text x="50%" y="58%" font-size="80" fill="#94a3b8" text-anchor="middle" font-family="Arial">👤</text>' +
+  '</svg>'
+);
+
+// ============================================================
+// AMBIL DATA DARI GOOGLE SHEETS (gviz)
+// ============================================================
+async function fetchSheetData() {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID}&headers=1`;
+  const res = await fetch(url, { cache: 'no-store' });
+  const text = await res.text();
+  const jsonText = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+  const json = JSON.parse(jsonText);
+  if (json.status === 'error') throw new Error(json.errors[0].detailed_message);
+  return json.table;
+}
+
+// ============================================================
+// PARSER: tabel gviz → array of objects
+// ============================================================
+function parseTable(table) {
+  const cols = table.cols.map(c => (c.label || '').toString().trim());
+  const rows = table.rows.map(r => {
+    const obj = {};
+    r.c.forEach((cell, i) => {
+      if (!cell) { obj[cols[i]] = ''; return; }
+      obj[cols[i]] = cell.v !== undefined && cell.v !== null ? cell.v : '';
+    });
+    return obj;
+  });
+  return { cols, rows };
+}
+
+// ============================================================
+// FOTO: ekstrak ID Google Drive → URL gambar langsung
+// ============================================================
+function extractDriveId(url) {
+  if (!url) return null;
+  const s = url.toString();
+  const m = s.match(/\/d\/([a-zA-Z0-9_-]{10,})/) || s.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
+  return m ? m[1] : null;
+}
+
+function driveImageUrl(url, size = 400) {
+  const id = extractDriveId(url);
+  if (!id) return PLACEHOLDER;
+  // googleusercontent lebih stabil untuk <img> tag, tanpa CORS
+  return `https://lh3.googleusercontent.com/d/${id}=w${size}`;
+}
+
+// ============================================================
+// UTILITY
+// ============================================================
+function formatCurrency(value) {
+  const n = Number(value) || 0;
+  if (Math.abs(n) >= 1e9) return (n / 1e9).toFixed(1) + ' M';
+  if (Math.abs(n) >= 1e6) return (n / 1e6).toFixed(1) + ' Jt';
+  if (Math.abs(n) >= 1e3) return (n / 1e3).toFixed(0) + ' Rb';
+  return n.toFixed(0);
+}
+function pctClass(p) { return p >= 100 ? 'green' : p >= 85 ? 'yellow' : 'red'; }
+function badgeClass(c) { return (c || '').toString().toLowerCase().trim(); }
+function toPct(v) {
+  const n = Number(v) || 0;
+  return n > 1.5 ? n : n * 100;
+}
+function escapeHtml(s) {
+  return (s == null ? '' : s.toString())
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+// ============================================================
+// RENDER SLIDE 1 — LEADERBOARD (Top 8, dengan foto)
+// ============================================================
+function renderLeaderboard(rows) {
+  const sorted = [...rows]
+    .filter(r => Number(r['Target']) > 0)
+    .sort((a, b) => toPct(b['%']) - toPct(a['%']));
+  const top = sorted.slice(0, 8);
+  document.getElementById('leaderboardGrid').innerHTML = top.map((p, i) => {
+    const rank = i + 1;
+    const pct = toPct(p['%']);
+    const photo = driveImageUrl(p['PHOTOS'], 200);
+    return `
+      <div class="leaderboard-card rank-${rank}">
+        <div class="lb-top">
+          <img class="lb-photo" src="${photo}" alt="${escapeHtml(p['NAMA'])}"
+               onerror="this.onerror=null;this.src='${PLACEHOLDER}'">
+          <div class="lb-name-block">
+            <div class="rank">#${rank}</div>
+            <div class="name">${escapeHtml(p['NAMA'] || '-')}</div>
+          </div>
+        </div>
+        <div class="achievement">${formatCurrency(p['ACHIEVEMENT'])}</div>
+        <div class="target">Target: ${formatCurrency(p['Target'])}</div>
+        <div class="pct ${pctClass(pct)}">${pct.toFixed(1)}%</div>
+      </div>`;
+  }).join('');
+}
+
+// ============================================================
+// RENDER SLIDE 2 — INDIVIDUAL CARDS (Top 6, dengan foto)
+// ============================================================
+function renderCards(rows) {
+  const slice = rows.filter(r => Number(r['Target']) > 0).slice(0, 6);
+  document.getElementById('cardsGrid').innerHTML = slice.map(p => {
+    const pct = toPct(p['%']);
+    const photo = driveImageUrl(p['PHOTOS'], 300);
+    return `
+      <div class="person-card">
+        <div class="top">
+          <img class="photo" src="${photo}" alt="${escapeHtml(p['NAMA'])}"
+               onerror="this.onerror=null;this.src='${PLACEHOLDER}'">
+          <div class="info">
+            <div class="name">${escapeHtml(p['NAMA'] || '-')}</div>
+            <div class="nik">NIK: ${escapeHtml(p['NIK'] || '-')}</div>
+            <span class="badge ${badgeClass(p['KATEGORI'])}">${escapeHtml(p['KATEGORI'] || '-')}</span>
+          </div>
+        </div>
+        <div>
+          <div class="row"><span class="label">Target</span><span class="value">${formatCurrency(p['Target'])}</span></div>
+          <div class="row"><span class="label">Achievement</span><span class="value">${formatCurrency(p['ACHIEVEMENT'])}</span></div>
+          <div class="row"><span class="label">% Achieve</span><span class="value pct-value ${pctClass(pct)}">${pct.toFixed(1)}%</span></div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ============================================================
+// RENDER SLIDE 3 — SUMMARY
+// ============================================================
+function renderSummary(rows) {
+  const valid = rows.filter(r => Number(r['Target']) > 0);
+  const totalTarget = valid.reduce((s, p) => s + (Number(p['Target']) || 0), 0);
+  const totalAchieve = valid.reduce((s, p) => s + (Number(p['ACHIEVEMENT']) || 0), 0);
+  const totalPct = totalTarget ? (totalAchieve / totalTarget) * 100 : 0;
+  const star = valid.filter(p => badgeClass(p['KATEGORI']) === 'star').length;
+  const avg  = valid.filter(p => badgeClass(p['KATEGORI']) === 'average').length;
+  const poor = valid.filter(p => badgeClass(p['KATEGORI']) === 'poor').length;
+
+  document.getElementById('summaryGrid').innerHTML = `
+    <div class="summary-card"><div class="big-number">${formatCurrency(totalTarget)}</div><div class="label">Total Target</div></div>
+    <div class="summary-card"><div class="big-number">${formatCurrency(totalAchieve)}</div><div class="label">Total Achievement</div></div>
+    <div class="summary-card"><div class="big-number" style="color:${totalPct>=100?'#4ade80':totalPct>=85?'#facc15':'#f87171'}">${totalPct.toFixed(1)}%</div><div class="label">Overall Achievement</div></div>
+    <div class="summary-card"><div class="big-number" style="color:#4ade80">${star}</div><div class="label">⭐ STAR</div></div>
+    <div class="summary-card"><div class="big-number" style="color:#facc15">${avg}</div><div class="label">📊 AVERAGE</div></div>
+    <div class="summary-card"><div class="big-number" style="color:#f87171">${poor}</div><div class="label">⚠️ POOR</div></div>
+  `;
+}
+
+// ============================================================
+// RENDER SLIDE 4 — CATEGORY (Furniture & Accessories)
+// ============================================================
+function renderCategory(rows) {
+  const valid = rows.filter(r => Number(r['Target']) > 0);
+  const furnTarget = valid.reduce((s, p) => s + (Number(p['TARGET FURN']) || 0), 0);
+  const furnActual = valid.reduce((s, p) => s + (Number(p['ACTUAL FURN']) || 0), 0);
+  const furnPct = furnTarget ? (furnActual / furnTarget) * 100 : 0;
+  const accTarget = valid.reduce((s, p) => s + (Number(p['TARGET ACC']) || 0), 0);
+  const accActual = valid.reduce((s, p) => s + (Number(p['ACTUAL ACC']) || 0), 0);
+  const accPct = accTarget ? (accActual / accTarget) * 100 : 0;
+
+  document.getElementById('categoryGrid').innerHTML = `
+    <div class="summary-card"><div class="big-number">${formatCurrency(furnTarget)}</div><div class="label">Target Furniture</div></div>
+    <div class="summary-card"><div class="big-number">${formatCurrency(furnActual)}</div><div class="label">Actual Furniture</div></div>
+    <div class="summary-card"><div class="big-number" style="color:${furnPct>=100?'#4ade80':furnPct>=85?'#facc15':'#f87171'}">${furnPct.toFixed(1)}%</div><div class="label">% Furniture</div></div>
+    <div class="summary-card"><div class="big-number">${formatCurrency(accTarget)}</div><div class="label">Target Accessories</div></div>
+    <div class="summary-card"><div class="big-number">${formatCurrency(accActual)}</div><div class="label">Actual Accessories</div></div>
+    <div class="summary-card"><div class="big-number" style="color:${accPct>=100?'#4ade80':accPct>=85?'#facc15':'#f87171'}">${accPct.toFixed(1)}%</div><div class="label">% Accessories</div></div>
+  `;
+}
+
+// ============================================================
+// SLIDE ROTATION
+// ============================================================
+const slides = document.querySelectorAll('.slide');
+const dotsContainer = document.getElementById('dots');
+let currentSlide = 0;
+
+slides.forEach((_, i) => {
+  const dot = document.createElement('div');
+  dot.className = 'dot' + (i === 0 ? ' active' : '');
+  dot.addEventListener('click', () => goToSlide(i));
+  dotsContainer.appendChild(dot);
+});
+function goToSlide(i) {
+  slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+  document.querySelectorAll('.dot').forEach((d, idx) => d.classList.toggle('active', idx === i));
+  currentSlide = i;
+}
+setInterval(() => goToSlide((currentSlide + 1) % slides.length), SLIDE_DURATION);
+
+// ============================================================
+// JAM
+// ============================================================
+function updateClock() {
+  document.getElementById('clock').textContent =
+    new Date().toLocaleTimeString('id-ID', { hour12: false });
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ============================================================
+// INIT & AUTO-REFRESH (SETIAP 2 MENIT)
+// ============================================================
+const statusEl = document.getElementById('status');
+const errorBox = document.getElementById('errorBox');
+
+async function loadAndRender() {
+  try {
+    statusEl.textContent = 'Memuat...';
+    const table = await fetchSheetData();
+    const { rows } = parseTable(table);
+    const clean = rows.filter(r => (r['NAMA'] || '').toString().trim() !== '');
+    if (clean.length === 0) throw new Error('Tidak ada data di sheet.');
+    renderLeaderboard(clean);
+    renderCards(clean);
+    renderSummary(clean);
+    renderCategory(clean);
+    statusEl.textContent = `✓ ${clean.length} sales · update ${new Date().toLocaleTimeString('id-ID',{hour12:false})}`;
+    errorBox.classList.remove('show');
+    console.log('[OK] Data loaded:', clean.length, 'rows');
+  } catch (e) {
+    console.error('[ERR]', e);
+    statusEl.textContent = '⚠ Gagal memuat';
+    errorBox.textContent = '⚠ Gagal memuat data: ' + e.message;
+    errorBox.classList.add('show');
+  }
+}
+
+loadAndRender();
+setInterval(loadAndRender, REFRESH_INTERVAL);
+</script>
+</body>
+  </html>
