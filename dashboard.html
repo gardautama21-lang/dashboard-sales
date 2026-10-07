@@ -78,33 +78,34 @@
     letter-spacing: 0.5px;
   }
 
-  /* Scroller (konten yang bisa auto-scroll) */
+  /* Scroller */
   .scroller {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    scrollbar-width: none;      /* Firefox */
-    -ms-overflow-style: none;   /* IE */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     scroll-behavior: smooth;
   }
-  .scroller::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+  .scroller::-webkit-scrollbar { display: none; }
 
-  /* ---------- LEADERBOARD ---------- */
+  /* ---------- LEADERBOARD (SEKARANG MENAMPILKAN SEMUA) ---------- */
   .leaderboard-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    gap: 18px;
-    height: 100%;
+    /* baris tidak dikunci — biar memanjang ke bawah */
+    grid-auto-rows: minmax(140px, auto);
+    gap: 14px;
+    padding-bottom: 8px;
   }
   .leaderboard-card {
     background: #1e293b;
-    border-radius: 18px;
-    padding: 20px 18px;
+    border-radius: 16px;
+    padding: 16px 16px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border-left: 8px solid #38bdf8;
+    border-left: 6px solid #38bdf8;
     animation: slideIn 0.6s ease-out;
   }
   .leaderboard-card.rank-1 { border-left-color: #fbbf24; background: linear-gradient(135deg, #1e293b, #292524); }
@@ -113,15 +114,15 @@
   .leaderboard-card .lb-top {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 8px;
+    gap: 10px;
+    margin-bottom: 6px;
   }
   .leaderboard-card .lb-photo {
-    width: 52px;
-    height: 52px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #38bdf8;
+    border: 2px solid #38bdf8;
     flex-shrink: 0;
     background: #334155;
   }
@@ -129,10 +130,10 @@
   .leaderboard-card.rank-2 .lb-photo { border-color: #cbd5e1; }
   .leaderboard-card.rank-3 .lb-photo { border-color: #b45309; }
   .leaderboard-card .lb-name-block { flex: 1; min-width: 0; }
-  .leaderboard-card .rank { font-size: 18px; font-weight: 700; color: #38bdf8; }
+  .leaderboard-card .rank { font-size: 15px; font-weight: 700; color: #38bdf8; }
   .leaderboard-card.rank-1 .rank { color: #fbbf24; }
   .leaderboard-card .name {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     color: #f1f5f9;
     white-space: nowrap;
@@ -140,19 +141,19 @@
     text-overflow: ellipsis;
   }
   .leaderboard-card .achievement {
-    font-size: 32px;
+    font-size: 24px;
     font-weight: 800;
     color: #f8fafc;
     font-variant-numeric: tabular-nums;
     line-height: 1.1;
   }
-  .leaderboard-card .target { font-size: 14px; color: #94a3b8; margin-top: 4px; }
-  .leaderboard-card .pct { font-size: 22px; font-weight: 700; margin-top: 6px; }
+  .leaderboard-card .target { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+  .leaderboard-card .pct { font-size: 18px; font-weight: 700; margin-top: 4px; }
   .pct.green { color: #4ade80; }
   .pct.yellow { color: #facc15; }
   .pct.red { color: #f87171; }
 
-  /* ---------- TABLE (untuk FURN, ACC, FP, COMMSER, FULL) ---------- */
+  /* ---------- TABLE (untuk slide lainnya) ---------- */
   .data-table {
     width: 100%;
     border-collapse: separate;
@@ -173,9 +174,7 @@
     z-index: 2;
     border-bottom: 2px solid #1e293b;
   }
-  .data-table tbody tr {
-    background: #1e293b;
-  }
+  .data-table tbody tr { background: #1e293b; }
   .data-table tbody td {
     padding: 12px 14px;
     font-size: 16px;
@@ -302,12 +301,12 @@
     </div>
   </div>
   <div class="slide-container">
-    <!-- Slide 0: Leaderboard -->
+    <!-- Slide 0: Semua SMT (Leaderboard) -->
     <div class="slide active">
-      <div class="slide-title">🏆 TOP 8 — PENCAPAIAN TERTINGGI</div>
+      <div class="slide-title">🏆 SEMUA SMT — PERINGKAT PENCAPAIAN</div>
       <div class="scroller" id="leaderboardGrid"></div>
     </div>
-    <!-- Slide 1: Semua SMT (Target/Achieve/%) -->
+    <!-- Slide 1: Semua SMT (Tabel) -->
     <div class="slide">
       <div class="slide-title">📋 SEMUA SMT — TARGET & ACHIEVEMENT</div>
       <div class="scroller" id="fullList"></div>
@@ -324,7 +323,7 @@
     </div>
     <!-- Slide 4: FP -->
     <div class="slide">
-      <div class="slide-title">🎯 PENCAPAIAN FP (FURNITURE PRODUCT)</div>
+      <div class="slide-title">🎯 PENCAPAIAN FP</div>
       <div class="scroller" id="fpList"></div>
     </div>
     <!-- Slide 5: COMMSER -->
@@ -348,7 +347,7 @@
 // ============================================================
 const SHEET_ID = '1_R03xSTGWXrQ9YfbREEOzp4PO2pQxo5RJhoSFtR87eY';
 const GID = '207779196';
-const REFRESH_INTERVAL = 120000;   // 2 menit
+const REFRESH_INTERVAL = 120000;       // 2 menit
 const SLIDE_DURATION_NO_SCROLL = 10000; // 10 detik jika tidak perlu scroll
 const SCROLL_SPEED_PX_PER_SEC = 40;     // kecepatan scroll (px/detik)
 const SCROLL_HOLD_BOTTOM = 2500;        // tahan 2,5 detik di bawah
@@ -418,7 +417,6 @@ function escapeHtml(s) {
 function nowTime() {
   return new Date().toLocaleTimeString('id-ID', { hour12: false, timeZone: TIMEZONE });
 }
-// Pilih kolom berdasarkan nama header, dengan fallback ke beberapa nama
 function pick(row, ...names) {
   for (const n of names) {
     if (row[n] !== undefined && row[n] !== '') return row[n];
@@ -427,13 +425,13 @@ function pick(row, ...names) {
 }
 
 // ============================================================
-// RENDER: LEADERBOARD (Top 8)
+// RENDER: LEADERBOARD — SEMUA SMT (TIDAK DIBATASI)
 // ============================================================
 function renderLeaderboard(rows) {
+  // Urutkan berdasarkan % pencapaian (desc). SEMUA baris ditampilkan.
   const sorted = [...rows]
     .filter(r => Number(pick(r, 'Target')) > 0)
-    .sort((a, b) => toPct(pick(b, '%')) - toPct(pick(a, '%')))
-    .slice(0, 8);
+    .sort((a, b) => toPct(pick(b, '%')) - toPct(pick(a, '%')));
 
   const html = '<div class="leaderboard-grid">' + sorted.map((p, i) => {
     const rank = i + 1;
@@ -461,10 +459,7 @@ function renderLeaderboard(rows) {
 // ============================================================
 // RENDER: TABEL GENERIK
 // ============================================================
-// sortBy: 'pct' | 'value' | 'name' | 'none'
 function buildTable(rows, cols, sortBy = 'pct') {
-  // cols: [{key, label, type: 'num'|'pct'|'name'|'rank'|'badge'|'photo', width?}]
-
   let data = [...rows];
 
   if (sortBy === 'pct') {
@@ -517,10 +512,10 @@ let CLEAN_DATA = [];
 function renderAllSlides() {
   const clean = CLEAN_DATA;
 
-  // Slide 0: Leaderboard
+  // Slide 0: Semua SMT (Leaderboard — TIDAK dibatasi)
   renderLeaderboard(clean);
 
-  // Slide 1: Semua SMT
+  // Slide 1: Semua SMT (Tabel)
   document.getElementById('fullList').innerHTML = buildTable(clean, [
     { key: 'NAMA', label: 'Nama', type: 'name' },
     { key: 'Target', label: 'Target', type: 'num' },
@@ -601,7 +596,6 @@ function setDots(i) {
 }
 
 function goToSlide(i) {
-  // Stop semua timer yang sedang berjalan
   clearInterval(scrollInterval);
   clearTimeout(switchTimer);
 
@@ -609,17 +603,14 @@ function goToSlide(i) {
   setDots(i);
   currentSlide = i;
 
-  // Tunggu sebentar untuk transisi opacity selesai, baru mulai scroll
   setTimeout(() => startSlideTimer(), 900);
 }
 
-// Auto-scroll dan auto-switch
 function startSlideTimer() {
   const activeSlide = document.querySelector('.slide.active');
   if (!activeSlide) return;
 
   const scroller = activeSlide.querySelector('.scroller');
-  // Jika slide ini tidak pakai scroller (mis. summary), pakai durasi tetap
   if (!scroller) {
     switchTimer = setTimeout(nextSlide, SLIDE_DURATION_NO_SCROLL);
     return;
@@ -628,24 +619,21 @@ function startSlideTimer() {
   // Reset scroll ke atas
   scroller.scrollTop = 0;
 
-  // Ukur apakah perlu scroll
   const maxScroll = scroller.scrollHeight - scroller.clientHeight;
 
   if (maxScroll <= 5) {
-    // Konten pendek → tidak perlu scroll
+    // Tidak perlu scroll → tunggu lalu pindah
     switchTimer = setTimeout(nextSlide, SLIDE_DURATION_NO_SCROLL);
     return;
   }
 
-  // Konten panjang → auto scroll pelan
-  // Kecepatan: SCROLL_SPEED_PX_PER_SEC px per detik → per 50ms = speed/20 px
-  const step = SCROLL_SPEED_PX_PER_SEC / 20;
+  // Auto-scroll pelan
+  const step = SCROLL_SPEED_PX_PER_SEC / 20; // per 50ms
 
   scrollInterval = setInterval(() => {
     scroller.scrollTop += step;
     if (scroller.scrollTop >= maxScroll - 1) {
       clearInterval(scrollInterval);
-      // Sampai bawah → tahan sebentar → pindah slide
       switchTimer = setTimeout(nextSlide, SCROLL_HOLD_BOTTOM);
     }
   }, 50);
@@ -678,12 +666,8 @@ async function loadAndRender() {
     CLEAN_DATA = rows.filter(r => (pick(r, 'NAMA') || '').toString().trim() !== '');
     if (CLEAN_DATA.length === 0) throw new Error('Tidak ada data di sheet.');
 
-    // Simpan slide aktif saat refresh
-    const wasSlide = currentSlide;
-
     renderAllSlides();
 
-    // Restart slide rotation dari slide yang sedang aktif (agar tidak reset)
     setTimeout(() => startSlideTimer(), 900);
 
     statusEl.textContent = `✓ ${CLEAN_DATA.length} sales · update ${nowTime()}`;
@@ -698,10 +682,7 @@ async function loadAndRender() {
 }
 
 loadAndRender();
-
-// Mulai rotasi pertama kali setelah data pertama datang
 setTimeout(() => startSlideTimer(), 1200);
-
 setInterval(loadAndRender, REFRESH_INTERVAL);
 </script>
 </body>
