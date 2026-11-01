@@ -17,123 +17,132 @@
   .dashboard {
     width: 100vw;
     height: 100vh;
-    padding: 24px 40px 50px 40px;
+    padding: 14px 18px 14px 18px;
     display: flex;
     flex-direction: column;
+    gap: 10px;
   }
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 14px;
-    border-bottom: 3px solid #1e293b;
-    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #1e293b;
     flex-shrink: 0;
   }
   .header h1 {
-    font-size: 34px;
+    font-size: 24px;
     font-weight: 700;
     color: #f8fafc;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
   }
   .header .right-block { text-align: right; }
   .header .clock {
-    font-size: 30px;
+    font-size: 22px;
     font-weight: 600;
     color: #38bdf8;
     font-variant-numeric: tabular-nums;
     display: block;
   }
   .header .status {
-    font-size: 14px;
+    font-size: 11px;
     color: #64748b;
     display: block;
   }
-  .slide-container {
+
+  /* ============ GRID UTAMA ============ */
+  .grid {
     flex: 1;
-    position: relative;
-    overflow: hidden;
-  }
-  .slide {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.8s ease-in-out;
-    pointer-events: none;
-    display: flex;
-    flex-direction: column;
-  }
-  .slide.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  .slide-title {
-    font-size: 26px;
-    font-weight: 700;
-    color: #38bdf8;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #1e293b;
-    margin-bottom: 14px;
-    flex-shrink: 0;
-    letter-spacing: 0.5px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1.15fr 1.15fr 0.7fr;
+    gap: 8px;
+    min-height: 0;
   }
 
-  /* Scroller */
-  .scroller {
+  /* ============ KOTAK ============ */
+  .box {
+    background: #1e293b;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+    border: 1px solid #334155;
+  }
+  .box-title {
+    padding: 6px 10px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #38bdf8;
+    background: #0f172a;
+    border-bottom: 1px solid #334155;
+    flex-shrink: 0;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .box-scroll {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    scroll-behavior: smooth;
+    padding: 6px;
+    min-height: 0;
   }
-  .scroller::-webkit-scrollbar { display: none; }
+  .box-scroll::-webkit-scrollbar { display: none; }
 
-  /* ---------- LEADERBOARD (SEKARANG MENAMPILKAN SEMUA) ---------- */
+  /* Posisi grid */
+  .box-leaderboard { grid-column: 1 / 3; grid-row: 1; }
+  .box-fulllist   { grid-column: 3 / 5; grid-row: 1; }
+  .box-furn       { grid-column: 1;     grid-row: 2; }
+  .box-acc        { grid-column: 2;     grid-row: 2; }
+  .box-fp         { grid-column: 3;     grid-row: 2; }
+  .box-commser    { grid-column: 4;     grid-row: 2; }
+  .box-summary    { grid-column: 1 / 5; grid-row: 3; }
+
+  /* ============ LEADERBOARD ============ */
   .leaderboard-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    /* baris tidak dikunci — biar memanjang ke bawah */
-    grid-auto-rows: minmax(140px, auto);
-    gap: 14px;
-    padding-bottom: 8px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
   }
   .leaderboard-card {
-    background: #1e293b;
-    border-radius: 16px;
-    padding: 16px 16px;
+    background: #334155;
+    border-radius: 8px;
+    padding: 6px 8px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    border-left: 6px solid #38bdf8;
-    animation: slideIn 0.6s ease-out;
+    border-left: 4px solid #38bdf8;
   }
-  .leaderboard-card.rank-1 { border-left-color: #fbbf24; background: linear-gradient(135deg, #1e293b, #292524); }
+  .leaderboard-card.rank-1 { border-left-color: #fbbf24; background: linear-gradient(135deg, #334155, #422006); }
   .leaderboard-card.rank-2 { border-left-color: #cbd5e1; }
   .leaderboard-card.rank-3 { border-left-color: #b45309; }
   .leaderboard-card .lb-top {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 6px;
+    gap: 6px;
+    margin-bottom: 3px;
   }
   .leaderboard-card .lb-photo {
-    width: 46px;
-    height: 46px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #38bdf8;
     flex-shrink: 0;
-    background: #334155;
+    background: #1e293b;
   }
   .leaderboard-card.rank-1 .lb-photo { border-color: #fbbf24; }
   .leaderboard-card.rank-2 .lb-photo { border-color: #cbd5e1; }
   .leaderboard-card.rank-3 .lb-photo { border-color: #b45309; }
   .leaderboard-card .lb-name-block { flex: 1; min-width: 0; }
-  .leaderboard-card .rank { font-size: 15px; font-weight: 700; color: #38bdf8; }
+  .leaderboard-card .rank { font-size: 10px; font-weight: 700; color: #38bdf8; }
   .leaderboard-card.rank-1 .rank { color: #fbbf24; }
   .leaderboard-card .name {
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 600;
     color: #f1f5f9;
     white-space: nowrap;
@@ -141,154 +150,101 @@
     text-overflow: ellipsis;
   }
   .leaderboard-card .achievement {
-    font-size: 24px;
+    font-size: 15px;
     font-weight: 800;
     color: #f8fafc;
     font-variant-numeric: tabular-nums;
     line-height: 1.1;
   }
-  .leaderboard-card .target { font-size: 12px; color: #94a3b8; margin-top: 2px; }
-  .leaderboard-card .pct { font-size: 18px; font-weight: 700; margin-top: 4px; }
+  .leaderboard-card .target { font-size: 9px; color: #94a3b8; }
+  .leaderboard-card .pct { font-size: 12px; font-weight: 700; }
   .pct.green { color: #4ade80; }
   .pct.yellow { color: #facc15; }
   .pct.red { color: #f87171; }
 
-  /* ---------- TABLE (untuk slide lainnya) ---------- */
+  /* ============ TABLE ============ */
   .data-table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 6px;
-    font-size: 16px;
+    border-collapse: collapse;
+    font-size: 11px;
   }
   .data-table thead th {
     background: #0f172a;
     color: #94a3b8;
-    font-size: 13px;
+    font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
-    padding: 10px 14px;
+    letter-spacing: 0.3px;
+    padding: 4px 6px;
     text-align: left;
     position: sticky;
     top: 0;
     z-index: 2;
-    border-bottom: 2px solid #1e293b;
-  }
-  .data-table tbody tr { background: #1e293b; }
-  .data-table tbody td {
-    padding: 12px 14px;
-    font-size: 16px;
-    color: #e2e8f0;
-    font-variant-numeric: tabular-nums;
-    border-top: 1px solid #334155;
     border-bottom: 1px solid #334155;
   }
-  .data-table tbody td:first-child {
-    border-left: 6px solid #38bdf8;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
+  .data-table tbody td {
+    padding: 4px 6px;
+    font-size: 11px;
+    color: #e2e8f0;
+    font-variant-numeric: tabular-nums;
+    border-bottom: 1px solid #334155;
   }
-  .data-table tbody td:last-child {
-    border-right: 1px solid #334155;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-  }
+  .data-table tbody tr:nth-child(even) td { background: #263449; }
   .data-table .col-name { font-weight: 600; color: #f1f5f9; }
-  .data-table .col-rank {
-    width: 50px;
-    color: #38bdf8;
-    font-weight: 700;
-    text-align: center;
-  }
+  .data-table .col-rank { width: 22px; color: #38bdf8; font-weight: 700; text-align: center; }
   .data-table .col-num { text-align: right; }
-  .data-table .col-pct { text-align: right; font-weight: 700; font-size: 17px; }
-  .data-table .col-badge { text-align: center; width: 120px; }
+  .data-table .col-pct { text-align: right; font-weight: 700; }
 
-  .badge {
-    display: inline-block;
-    padding: 3px 12px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .badge.star { background: #166534; color: #bbf7d0; }
-  .badge.average { background: #854d0e; color: #fef08a; }
-  .badge.poor { background: #991b1b; color: #fecaca; }
-  .badge.ok { background: #166534; color: #bbf7d0; }
-  .badge.warn { background: #854d0e; color: #fef08a; }
-  .badge.bad { background: #991b1b; color: #fecaca; }
-
-  /* ---------- SUMMARY ---------- */
+  /* ============ SUMMARY ============ */
   .summary-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
     height: 100%;
+    align-items: center;
   }
   .summary-card {
-    background: #1e293b;
-    border-radius: 20px;
-    padding: 24px;
+    background: #334155;
+    border-radius: 8px;
+    padding: 8px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    animation: slideIn 0.6s ease-out;
   }
   .summary-card .big-number {
-    font-size: 56px;
+    font-size: 22px;
     font-weight: 800;
     color: #38bdf8;
     font-variant-numeric: tabular-nums;
     line-height: 1;
   }
-  .summary-card .label { font-size: 20px; color: #94a3b8; margin-top: 10px; }
-
-  /* ---------- DOTS ---------- */
-  .dots {
-    position: absolute;
-    bottom: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 10px;
-    z-index: 10;
+  .summary-card .label {
+    font-size: 9px;
+    color: #94a3b8;
+    margin-top: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
   }
-  .dot {
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    background: #334155;
-    transition: all 0.3s;
-  }
-  .dot.active { background: #38bdf8; transform: scale(1.3); }
 
-  /* ---------- ERROR ---------- */
+  /* ============ ERROR ============ */
   .error-box {
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: #7f1d1d;
     color: #fecaca;
-    padding: 30px 50px;
-    border-radius: 16px;
-    font-size: 20px;
+    padding: 20px 40px;
+    border-radius: 12px;
+    font-size: 16px;
     text-align: center;
     display: none;
     z-index: 100;
     max-width: 70%;
   }
   .error-box.show { display: block; }
-
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
 </style>
 </head>
 <body>
@@ -300,45 +256,47 @@
       <span class="status" id="status">Memuat data...</span>
     </div>
   </div>
-  <div class="slide-container">
-    <!-- Slide 0: Semua SMT (Leaderboard) -->
-    <div class="slide active">
-      <div class="slide-title">🏆 SEMUA SMT — PERINGKAT PENCAPAIAN</div>
-      <div class="scroller" id="leaderboardGrid"></div>
+
+  <div class="grid">
+    <div class="box box-leaderboard">
+      <div class="box-title">🏆 SEMUA SMT — PERINGKAT</div>
+      <div class="box-scroll" id="leaderboardGrid"></div>
     </div>
-    <!-- Slide 1: Semua SMT (Tabel) -->
-    <div class="slide">
-      <div class="slide-title">📋 SEMUA SMT — TARGET & ACHIEVEMENT</div>
-      <div class="scroller" id="fullList"></div>
+
+    <div class="box box-fulllist">
+      <div class="box-title">📋 SEMUA SMT — TARGET & ACHIEVEMENT</div>
+      <div class="box-scroll" id="fullList"></div>
     </div>
-    <!-- Slide 2: FURN -->
-    <div class="slide">
-      <div class="slide-title">🛋️ PENCAPAIAN FURNITURE</div>
-      <div class="scroller" id="furnList"></div>
+
+    <div class="box box-furn">
+      <div class="box-title">🛋️ FURNITURE</div>
+      <div class="box-scroll" id="furnList"></div>
     </div>
-    <!-- Slide 3: ACC -->
-    <div class="slide">
-      <div class="slide-title">🎁 PENCAPAIAN ACCESSORIES</div>
-      <div class="scroller" id="accList"></div>
+
+    <div class="box box-acc">
+      <div class="box-title">🎁 ACCESSORIES</div>
+      <div class="box-scroll" id="accList"></div>
     </div>
-    <!-- Slide 4: FP -->
-    <div class="slide">
-      <div class="slide-title">🎯 PENCAPAIAN FP</div>
-      <div class="scroller" id="fpList"></div>
+
+    <div class="box box-fp">
+      <div class="box-title">🎯 FP</div>
+      <div class="box-scroll" id="fpList"></div>
     </div>
-    <!-- Slide 5: COMMSER -->
-    <div class="slide">
-      <div class="slide-title">💼 PENCAPAIAN COMMSER</div>
-      <div class="scroller" id="commserList"></div>
+
+    <div class="box box-commser">
+      <div class="box-title">💼 COMMSER</div>
+      <div class="box-scroll" id="commserList"></div>
     </div>
-    <!-- Slide 6: Summary -->
-    <div class="slide">
-      <div class="slide-title">📈 RINGKASAN TIM</div>
-      <div class="summary-grid" id="summaryGrid"></div>
+
+    <div class="box box-summary">
+      <div class="box-title">📈 RINGKASAN TIM</div>
+      <div class="box-scroll">
+        <div class="summary-grid" id="summaryGrid"></div>
+      </div>
     </div>
-    <div class="dots" id="dots"></div>
-    <div class="error-box" id="errorBox"></div>
   </div>
+
+  <div class="error-box" id="errorBox"></div>
 </div>
 
 <script>
@@ -347,16 +305,19 @@
 // ============================================================
 const SHEET_ID = '1_R03xSTGWXrQ9YfbREEOzp4PO2pQxo5RJhoSFtR87eY';
 const GID = '207779196';
-const REFRESH_INTERVAL = 120000;       // 2 menit
-const SLIDE_DURATION_NO_SCROLL = 10000; // 10 detik jika tidak perlu scroll
-const SCROLL_SPEED_PX_PER_SEC = 40;     // kecepatan scroll (px/detik)
-const SCROLL_HOLD_BOTTOM = 2500;        // tahan 2,5 detik di bawah
+const REFRESH_INTERVAL = 120000;        // 2 menit
 const TIMEZONE = 'Asia/Jakarta';        // UTC+7 (WIB)
 
+// --- Pengaturan scroll tiap kotak ---
+const SCROLL_SPEED_PX_PER_SEC = 25;     // kecepatan scroll (px/detik)
+const SCROLL_HOLD_BOTTOM_MS = 2000;     // tahan di bawah sebelum balik ke atas
+const SCROLL_HOLD_TOP_MS = 1200;        // tahan di atas sebelum scroll lagi
+const SCROLL_TICK_MS = 50;              // resolusi animasi
+
 const PLACEHOLDER = 'data:image/svg+xml;utf8,' + encodeURIComponent(
-  '<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">' +
-  '<rect width="200" height="200" fill="#334155"/>' +
-  '<text x="50%" y="58%" font-size="80" fill="#94a3b8" text-anchor="middle" font-family="Arial">👤</text>' +
+  '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">' +
+  '<rect width="100" height="100" fill="#1e293b"/>' +
+  '<text x="50%" y="62%" font-size="40" fill="#94a3b8" text-anchor="middle" font-family="Arial">👤</text>' +
   '</svg>'
 );
 
@@ -388,10 +349,11 @@ function parseTable(table) {
 // ============================================================
 function extractDriveId(url) {
   if (!url) return null;
-  const m = url.toString().match(/\/d\/([a-zA-Z0-9_-]{10,})/) || url.toString().match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
+  const s = url.toString();
+  const m = s.match(/\/d\/([a-zA-Z0-9_-]{10,})/) || s.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
   return m ? m[1] : null;
 }
-function driveImageUrl(url, size = 400) {
+function driveImageUrl(url, size = 200) {
   const id = extractDriveId(url);
   return id ? `https://lh3.googleusercontent.com/d/${id}=w${size}` : PLACEHOLDER;
 }
@@ -407,7 +369,6 @@ function formatCurrency(value) {
   return n.toFixed(0);
 }
 function pctClass(p) { return p >= 100 ? 'green' : p >= 85 ? 'yellow' : 'red'; }
-function badgeClass(c) { return (c || '').toString().toLowerCase().trim(); }
 function toPct(v) { const n = Number(v) || 0; return n > 1.5 ? n : n * 100; }
 function escapeHtml(s) {
   return (s == null ? '' : s.toString())
@@ -425,10 +386,9 @@ function pick(row, ...names) {
 }
 
 // ============================================================
-// RENDER: LEADERBOARD — SEMUA SMT (TIDAK DIBATASI)
+// RENDER: LEADERBOARD — SEMUA SMT
 // ============================================================
 function renderLeaderboard(rows) {
-  // Urutkan berdasarkan % pencapaian (desc). SEMUA baris ditampilkan.
   const sorted = [...rows]
     .filter(r => Number(pick(r, 'Target')) > 0)
     .sort((a, b) => toPct(pick(b, '%')) - toPct(pick(a, '%')));
@@ -436,7 +396,7 @@ function renderLeaderboard(rows) {
   const html = '<div class="leaderboard-grid">' + sorted.map((p, i) => {
     const rank = i + 1;
     const pct = toPct(pick(p, '%'));
-    const photo = driveImageUrl(pick(p, 'PHOTOS'), 200);
+    const photo = driveImageUrl(pick(p, 'PHOTOS'), 100);
     return `
       <div class="leaderboard-card rank-${rank}">
         <div class="lb-top">
@@ -463,10 +423,11 @@ function buildTable(rows, cols, sortBy = 'pct') {
   let data = [...rows];
 
   if (sortBy === 'pct') {
-    data.sort((a, b) => toPct(pick(b, cols[3]?.key || '')) - toPct(pick(a, cols[3]?.key || '')));
+    const pctKey = cols.find(c => c.type === 'pct')?.key;
+    if (pctKey) data.sort((a, b) => toPct(pick(b, pctKey)) - toPct(pick(a, pctKey)));
   } else if (sortBy === 'value') {
     const key = cols.find(c => c.type === 'num')?.key;
-    data.sort((a, b) => (Number(pick(b, key)) || 0) - (Number(pick(a, key)) || 0));
+    if (key) data.sort((a, b) => (Number(pick(b, key)) || 0) - (Number(pick(a, key)) || 0));
   } else if (sortBy === 'name') {
     data.sort((a, b) => (pick(a, 'NAMA') || '').toString().localeCompare(pick(b, 'NAMA') || ''));
   }
@@ -474,7 +435,7 @@ function buildTable(rows, cols, sortBy = 'pct') {
   let html = '<table class="data-table"><thead><tr>';
   html += '<th class="col-rank">#</th>';
   cols.forEach(c => {
-    const cls = c.type === 'num' || c.type === 'pct' ? 'col-num' : (c.type === 'badge' ? 'col-badge' : (c.type === 'name' ? 'col-name' : ''));
+    const cls = c.type === 'num' || c.type === 'pct' ? 'col-num' : (c.type === 'name' ? 'col-name' : '');
     html += `<th class="${cls}">${c.label}</th>`;
   });
   html += '</tr></thead><tbody>';
@@ -489,10 +450,6 @@ function buildTable(rows, cols, sortBy = 'pct') {
       } else if (c.type === 'pct') {
         const pct = toPct(raw);
         html += `<td class="col-pct ${pctClass(pct)}">${pct.toFixed(1)}%</td>`;
-      } else if (c.type === 'badge') {
-        const cls = pctClass(toPct(raw)) === 'green' ? 'ok' : pctClass(toPct(raw)) === 'yellow' ? 'warn' : 'bad';
-        const pct = toPct(raw);
-        html += `<td class="col-badge"><span class="badge ${cls}">${pct.toFixed(0)}%</span></td>`;
       } else {
         html += `<td class="${c.type === 'name' ? 'col-name' : ''}">${escapeHtml(raw || '-')}</td>`;
       }
@@ -505,146 +462,130 @@ function buildTable(rows, cols, sortBy = 'pct') {
 }
 
 // ============================================================
-// RENDER SEMUA SLIDE
+// RENDER SEMUA KOTAK
 // ============================================================
 let CLEAN_DATA = [];
 
-function renderAllSlides() {
+function renderAllBoxes() {
   const clean = CLEAN_DATA;
 
-  // Slide 0: Semua SMT (Leaderboard — TIDAK dibatasi)
   renderLeaderboard(clean);
 
-  // Slide 1: Semua SMT (Tabel)
   document.getElementById('fullList').innerHTML = buildTable(clean, [
     { key: 'NAMA', label: 'Nama', type: 'name' },
     { key: 'Target', label: 'Target', type: 'num' },
-    { key: 'ACHIEVEMENT', label: 'Achievement', type: 'num' },
-    { key: '%', label: '%', type: 'pct' },
-    { key: 'KATEGORI', label: 'Kategori', type: 'text' }
+    { key: 'ACHIEVEMENT', label: 'Achieve', type: 'num' },
+    { key: '%', label: '%', type: 'pct' }
   ], 'pct');
 
-  // Slide 2: FURN
   document.getElementById('furnList').innerHTML = buildTable(clean, [
     { key: 'NAMA', label: 'Nama', type: 'name' },
-    { key: 'TARGET FURN', label: 'Target FURN', type: 'num' },
-    { key: 'ACTUAL FURN', label: 'Actual FURN', type: 'num' },
-    { key: '% FURN', label: '% FURN', type: 'pct' },
-    { key: '% FURN', label: 'Status', type: 'badge' }
+    { key: 'ACTUAL FURN', label: 'Actual', type: 'num' },
+    { key: '% FURN', label: '%', type: 'pct' }
   ], 'pct');
 
-  // Slide 3: ACC
   document.getElementById('accList').innerHTML = buildTable(clean, [
     { key: 'NAMA', label: 'Nama', type: 'name' },
-    { key: 'TARGET ACC', label: 'Target ACC', type: 'num' },
-    { key: 'ACTUAL ACC', label: 'Actual ACC', type: 'num' },
-    { key: '% ACC', label: '% ACC', type: 'pct' },
-    { key: '% ACC', label: 'Status', type: 'badge' }
+    { key: 'ACTUAL ACC', label: 'Actual', type: 'num' },
+    { key: '% ACC', label: '%', type: 'pct' }
   ], 'pct');
 
-  // Slide 4: FP
   document.getElementById('fpList').innerHTML = buildTable(clean, [
     { key: 'NAMA', label: 'Nama', type: 'name' },
-    { key: 'TARGET FP', label: 'Target FP', type: 'num' },
-    { key: 'ACTUAL FP', label: 'Actual FP', type: 'num' },
-    { key: 'ACTUAL FP', label: 'Incentive FP', type: 'num' }
+    { key: 'ACTUAL FP', label: 'Actual', type: 'num' }
   ], 'value');
 
-  // Slide 5: COMMSER
   document.getElementById('commserList').innerHTML = buildTable(clean, [
     { key: 'NAMA', label: 'Nama', type: 'name' },
-    { key: 'TARGET COMMSER', label: 'Target COMMSER', type: 'num' },
-    { key: 'ACTUAL COMMSER', label: 'Actual COMMSER', type: 'num' }
+    { key: 'ACTUAL COMMSER', label: 'Actual', type: 'num' }
   ], 'value');
 
-  // Slide 6: Summary
+  // Summary
   const valid = clean.filter(r => Number(pick(r, 'Target')) > 0);
   const totalTarget = valid.reduce((s, p) => s + (Number(pick(p, 'Target')) || 0), 0);
   const totalAchieve = valid.reduce((s, p) => s + (Number(pick(p, 'ACHIEVEMENT')) || 0), 0);
   const totalPct = totalTarget ? (totalAchieve / totalTarget) * 100 : 0;
-  const star = valid.filter(p => badgeClass(pick(p, 'KATEGORI')) === 'star').length;
-  const avg  = valid.filter(p => badgeClass(pick(p, 'KATEGORI')) === 'average').length;
-  const poor = valid.filter(p => badgeClass(pick(p, 'KATEGORI')) === 'poor').length;
+  const star = valid.filter(p => (pick(p, 'KATEGORI') || '').toString().toLowerCase().trim() === 'star').length;
+  const avg  = valid.filter(p => (pick(p, 'KATEGORI') || '').toString().toLowerCase().trim() === 'average').length;
+  const poor = valid.filter(p => (pick(p, 'KATEGORI') || '').toString().toLowerCase().trim() === 'poor').length;
 
   document.getElementById('summaryGrid').innerHTML = `
     <div class="summary-card"><div class="big-number">${formatCurrency(totalTarget)}</div><div class="label">Total Target</div></div>
-    <div class="summary-card"><div class="big-number">${formatCurrency(totalAchieve)}</div><div class="label">Total Achievement</div></div>
-    <div class="summary-card"><div class="big-number" style="color:${totalPct>=100?'#4ade80':totalPct>=85?'#facc15':'#f87171'}">${totalPct.toFixed(1)}%</div><div class="label">Overall Achievement</div></div>
-    <div class="summary-card"><div class="big-number" style="color:#4ade80">${star}</div><div class="label">⭐ STAR</div></div>
-    <div class="summary-card"><div class="big-number" style="color:#facc15">${avg}</div><div class="label">📊 AVERAGE</div></div>
-    <div class="summary-card"><div class="big-number" style="color:#f87171">${poor}</div><div class="label">⚠️ POOR</div></div>
+    <div class="summary-card"><div class="big-number">${formatCurrency(totalAchieve)}</div><div class="label">Total Achieve</div></div>
+    <div class="summary-card"><div class="big-number" style="color:${totalPct>=100?'#4ade80':totalPct>=85?'#facc15':'#f87171'}">${totalPct.toFixed(1)}%</div><div class="label">Overall</div></div>
+    <div class="summary-card"><div class="big-number" style="color:#4ade80">${star}</div><div class="label">⭐ Star</div></div>
+    <div class="summary-card"><div class="big-number" style="color:#facc15">${avg}</div><div class="label">📊 Avg</div></div>
+    <div class="summary-card"><div class="big-number" style="color:#f87171">${poor}</div><div class="label">⚠️ Poor</div></div>
   `;
 }
 
 // ============================================================
-// SLIDE ROTATION + AUTO SCROLL
+// AUTO SCROLL — TIAP KOTAK INDEPENDEN
 // ============================================================
-const slides = document.querySelectorAll('.slide');
-const dotsContainer = document.getElementById('dots');
-let currentSlide = 0;
-let scrollInterval = null;
-let switchTimer = null;
+const scrollStates = new WeakMap();
 
-slides.forEach((_, i) => {
-  const dot = document.createElement('div');
-  dot.className = 'dot' + (i === 0 ? ' active' : '');
-  dotsContainer.appendChild(dot);
-});
+function initScrollFor(scroller) {
+  if (scrollStates.has(scroller)) return;
+  const state = { pos: 0, phase: 'scrolling', pauseUntil: 0 };
+  scrollStates.set(scroller, state);
 
-function setDots(i) {
-  document.querySelectorAll('.dot').forEach((d, idx) => d.classList.toggle('active', idx === i));
-}
+  setInterval(() => {
+    const now = Date.now();
+    if (now < state.pauseUntil) return;
 
-function goToSlide(i) {
-  clearInterval(scrollInterval);
-  clearTimeout(switchTimer);
+    const maxScroll = scroller.scrollHeight - scroller.clientHeight;
 
-  slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
-  setDots(i);
-  currentSlide = i;
-
-  setTimeout(() => startSlideTimer(), 900);
-}
-
-function startSlideTimer() {
-  const activeSlide = document.querySelector('.slide.active');
-  if (!activeSlide) return;
-
-  const scroller = activeSlide.querySelector('.scroller');
-  if (!scroller) {
-    switchTimer = setTimeout(nextSlide, SLIDE_DURATION_NO_SCROLL);
-    return;
-  }
-
-  // Reset scroll ke atas
-  scroller.scrollTop = 0;
-
-  const maxScroll = scroller.scrollHeight - scroller.clientHeight;
-
-  if (maxScroll <= 5) {
-    // Tidak perlu scroll → tunggu lalu pindah
-    switchTimer = setTimeout(nextSlide, SLIDE_DURATION_NO_SCROLL);
-    return;
-  }
-
-  // Auto-scroll pelan
-  const step = SCROLL_SPEED_PX_PER_SEC / 20; // per 50ms
-
-  scrollInterval = setInterval(() => {
-    scroller.scrollTop += step;
-    if (scroller.scrollTop >= maxScroll - 1) {
-      clearInterval(scrollInterval);
-      switchTimer = setTimeout(nextSlide, SCROLL_HOLD_BOTTOM);
+    // Jika konten pendek → tidak perlu scroll
+    if (maxScroll <= 5) {
+      if (state.pos !== 0 || scroller.scrollTop !== 0) {
+        state.pos = 0;
+        scroller.scrollTop = 0;
+      }
+      return;
     }
-  }, 50);
+
+    // Jika sedang fase reset (jeda di bawah sudah selesai)
+    if (state.phase === 'reset') {
+      state.pos = 0;
+      scroller.scrollTop = 0;
+      state.phase = 'scrolling';
+      state.pauseUntil = now + SCROLL_HOLD_TOP_MS;
+      return;
+    }
+
+    // Scroll naik pelan
+    const step = (SCROLL_SPEED_PX_PER_SEC * SCROLL_TICK_MS) / 1000;
+    state.pos = Math.min(state.pos + step, maxScroll);
+    scroller.scrollTop = state.pos;
+
+    // Sudah sampai bawah → pause & reset
+    if (state.pos >= maxScroll) {
+      state.pauseUntil = now + SCROLL_HOLD_BOTTOM_MS;
+      state.phase = 'reset';
+    }
+  }, SCROLL_TICK_MS);
 }
 
-function nextSlide() {
-  goToSlide((currentSlide + 1) % slides.length);
+function initAllScrolls() {
+  document.querySelectorAll('.box-scroll').forEach(scroller => {
+    initScrollFor(scroller);
+  });
+}
+
+function resetAllScrolls() {
+  document.querySelectorAll('.box-scroll').forEach(scroller => {
+    const state = scrollStates.get(scroller);
+    if (state) {
+      state.pos = 0;
+      state.phase = 'scrolling';
+      state.pauseUntil = 0;
+    }
+    scroller.scrollTop = 0;
+  });
 }
 
 // ============================================================
-// JAM (UTC+7)
+// JAM
 // ============================================================
 function updateClock() {
   document.getElementById('clock').textContent = nowTime();
@@ -653,7 +594,7 @@ setInterval(updateClock, 1000);
 updateClock();
 
 // ============================================================
-// INIT & AUTO-REFRESH
+// INIT & AUTO REFRESH
 // ============================================================
 const statusEl = document.getElementById('status');
 const errorBox = document.getElementById('errorBox');
@@ -666,9 +607,8 @@ async function loadAndRender() {
     CLEAN_DATA = rows.filter(r => (pick(r, 'NAMA') || '').toString().trim() !== '');
     if (CLEAN_DATA.length === 0) throw new Error('Tidak ada data di sheet.');
 
-    renderAllSlides();
-
-    setTimeout(() => startSlideTimer(), 900);
+    renderAllBoxes();
+    resetAllScrolls();
 
     statusEl.textContent = `✓ ${CLEAN_DATA.length} sales · update ${nowTime()}`;
     errorBox.classList.remove('show');
@@ -681,8 +621,13 @@ async function loadAndRender() {
   }
 }
 
+// Mulai scroll engine (akan no-op kalau konten belum ada)
+initAllScrolls();
+
+// Load pertama
 loadAndRender();
-setTimeout(() => startSlideTimer(), 1200);
+
+// Auto refresh tiap 2 menit
 setInterval(loadAndRender, REFRESH_INTERVAL);
 </script>
 </body>
